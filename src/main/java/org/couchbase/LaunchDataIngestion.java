@@ -3,10 +3,7 @@ package org.couchbase;
 import com.couchbase.client.java.json.JsonObject;
 
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 /**
@@ -31,5 +28,12 @@ public class LaunchDataIngestion {
 				.forEach(i -> {
 					executorService.execute(new DataConsumer(sharedTasksQueue));
 				});
+
+		// Schedule a task to forcefully terminate the application after 1 minutes to limit the data load
+		// TODO: Remove this code if you want to run the application indefinitely
+		Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+			System.out.println("Forcefully terminating the application...");
+			System.exit(130); // Exit with a specific status code (130 is commonly used for SIGINT)
+		}, 1, TimeUnit.MINUTES);
 	}
 }
