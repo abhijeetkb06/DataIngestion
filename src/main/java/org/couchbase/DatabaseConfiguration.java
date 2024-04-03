@@ -11,8 +11,8 @@ import java.time.Duration;
  */
 public class DatabaseConfiguration {
 
-	private static final String CONNECTION_STRING = "couchbases://cb.rkuhq4e3gxv93sce.cloud.couchbase.com";
-	private static final String USERNAME = "abhijeet";
+	private static final String CONNECTION_STRING = "couchbases://cb.m3ymk87rtxogiyay.cloud.couchbase.com";
+	private static final String USERNAME = "admin";
 	private static final String PASSWORD = "Password@P1";
 	private static final String BUCKET = "tpsdata";
 	private static final String SCOPE = "_default";
