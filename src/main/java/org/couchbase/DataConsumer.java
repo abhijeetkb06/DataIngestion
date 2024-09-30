@@ -1,8 +1,10 @@
 package org.couchbase;
 
+import com.couchbase.client.java.json.JsonArray;
 import com.couchbase.client.java.json.JsonObject;
 import com.couchbase.client.java.kv.MutationResult;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
@@ -26,16 +28,15 @@ public class DataConsumer extends Thread {
 	public void run() {
 		try {
 			while (true) {
-				
-				System.out.println("***************QUEUE SIZE************** "+ tasksQueue.size());
 
-				// Remove the user from shared queue and process
-				bulkInsert(tasksQueue.take());
+				System.out.println("***************QUEUE SIZE************** " + tasksQueue.size());
 
-//				bulkInsert(generateMockDataParallel());
+				// Remove the data from the shared queue and process
+				List<JsonObject> dataBatch = tasksQueue.take();
+				bulkInsert(dataBatch);
+
 				System.out.println(" CONSUMED \n");
 				System.out.println(" Thread Name: " + Thread.currentThread().getName());
-//				Thread.sleep(100);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -47,10 +48,33 @@ public class DataConsumer extends Thread {
 		return Flux.fromIterable(data)
 				.parallel(ConcurrencyConfig.BULK_INSERT_CONCURRENT_OPS)
 				.runOn(Schedulers.boundedElastic()) // or one of your choice
-				.flatMap(doc -> dbConfig.getCollection().upsert(doc.getString("transactionId"),doc))
-		        .doOnError(e -> Flux.empty())
+				.flatMap(doc -> {
+
+					// Fetch the array of devices and process them safely
+					JsonArray devicesArray = doc.getArray("deviceInfo");
+
+					if (devicesArray != null) {
+						return Flux.fromIterable(devicesArray)
+								.flatMap(deviceObj -> {
+									JsonObject device = (JsonObject) deviceObj; // Explicit cast to JsonObject
+
+									// Use the deviceId as the key for insertion
+									return dbConfig.getCollection()
+											.upsert(device.getString("deviceId"), doc)
+											.onErrorResume(e -> {
+												System.err.println("Error inserting device: " + e.getMessage());
+												return Mono.empty(); // Use Mono.empty() instead of Flux.empty()
+											});
+								});
+					} else {
+						// If no devices found, return an empty flux
+						return Flux.empty();
+					}
+				})
+				.doOnError(e -> Flux.empty())
 				.sequential()
 				.collectList()
 				.block();
 	}
 }
+

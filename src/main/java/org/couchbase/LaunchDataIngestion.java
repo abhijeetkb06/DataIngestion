@@ -31,9 +31,9 @@ public class LaunchDataIngestion {
 
 		// Schedule a task to forcefully terminate the application after 1 minutes to limit the data load
 		// TODO: Remove this code if you want to run the application indefinitely
-		Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+		/*Executors.newSingleThreadScheduledExecutor().schedule(() -> {
 			System.out.println("Forcefully terminating the application...");
 			System.exit(130); // Exit with a specific status code (130 is commonly used for SIGINT)
-		}, 1, TimeUnit.MINUTES);
+		}, 1, TimeUnit.MINUTES);*/
 	}
 }
