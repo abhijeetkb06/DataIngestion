@@ -1,24 +1,22 @@
 package org.couchbase;
 
 /**
- * This defines the concurrency parameters for executor thread pool, producer, consumer, mock data generation and bulk insert parallelism.
+ * Defines concurrency parameters for thread pools, data generation, and bulk insert parallelism.
  *
- * @author abhijeetbehera
+ * @author abhijeet
  */
 public class ConcurrencyConfig {
 
-    // Executor thread pool config and producer consumer thread range
-    public static final int EXECUTOR_THREAD_POOL = 40;
+    // Thread pool configuration for producers and consumers
+    public static final int EXECUTOR_THREAD_POOL = 20;  // Adjust based on your system's CPU cores
     public static final int PRODUCER_START_RANGE = 0;
-    public static final int PRODUCER_END_RANGE = 20;
+    public static final int PRODUCER_END_RANGE = 10;  // Number of producers
     public static final int CONSUMER_START_RANGE = 0;
-    public static final int CONSUMER_END_RANGE = 20;
+    public static final int CONSUMER_END_RANGE = 10;  // Number of consumers
 
     // Mock data generation parallelism
-    public static final int MOCK_DATA_START_RANGE = 1;
-    public static final int MOCK_DATA_END_RANGE = 20;
-    public static final int MOCK_DATA_PARALLELISM = 20;
+    public static final int MOCK_DATA_PARALLELISM = 10;
 
     // Bulk insert parallelism
-    public static final int BULK_INSERT_CONCURRENT_OPS = 20;
+    public static final int BULK_INSERT_CONCURRENT_OPS = 10;
 }

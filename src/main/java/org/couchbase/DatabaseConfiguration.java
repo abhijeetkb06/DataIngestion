@@ -1,5 +1,7 @@
 package org.couchbase;
 
+import com.couchbase.client.core.env.IoConfig;
+import com.couchbase.client.core.env.TimeoutConfig;
 import com.couchbase.client.java.*;
 
 import java.time.Duration;
@@ -35,7 +37,8 @@ public class DatabaseConfiguration {
 		cluster = Cluster.connect(
 				CONNECTION_STRING,
 				ClusterOptions.clusterOptions(USERNAME, PASSWORD).environment(env -> {
-					env.applyProfile("wan-development");
+					env.timeoutConfig(TimeoutConfig.kvTimeout(Duration.ofSeconds(30)));  // Increase KV timeout to 30 seconds
+					env.ioConfig(IoConfig.maxHttpConnections(16));  // Optional: Tune HTTP connection pool size
 				})
 		);
 
@@ -49,13 +52,13 @@ public class DatabaseConfiguration {
 		REACTIVE_SCOPE = scope.reactive();
 		REACTIVE_COLLECTION = collection.reactive();
 
-// Is there a way to disable Java SDK Info & Warn message logs? It clutters the console with info messages
+		// Disable Couchbase SDK logging
 		Logger rootLogger = Logger.getLogger("com.couchbase");
 		rootLogger.setLevel(Level.OFF);
 	}
 
 	private DatabaseConfiguration() {
-		// Private constructor to prevent instantiation from outside
+		// Private constructor to prevent instantiation
 	}
 
 	public static DatabaseConfiguration getInstance() {

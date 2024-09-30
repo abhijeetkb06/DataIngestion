@@ -7,33 +7,30 @@ import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 /**
- * This initiates the process of data ingestion in Couchbase.
- * 
- * @author abhijeetbehera
+ * Initiates the data ingestion process into Couchbase.
  */
 public class LaunchDataIngestion {
 
 	public static void main(String[] args) {
 
-		BlockingQueue<List<JsonObject>> sharedTasksQueue = new LinkedBlockingQueue<List<JsonObject>>();
+		// BlockingQueue shared between producers and consumers
+		BlockingQueue<List<JsonObject>> sharedTasksQueue = new LinkedBlockingQueue<>(1000); // Bounded queue to avoid memory issues
 
+		// Executor service for managing producer and consumer threads
 		ExecutorService executorService = Executors.newFixedThreadPool(ConcurrencyConfig.EXECUTOR_THREAD_POOL);
 
+		// Start producers
 		IntStream.range(ConcurrencyConfig.PRODUCER_START_RANGE, ConcurrencyConfig.PRODUCER_END_RANGE)
-				.forEach(i -> {
-					executorService.execute(new DataProducer(sharedTasksQueue));
-				});
+				.forEach(i -> executorService.execute(new DataProducer(sharedTasksQueue)));
 
+		// Start consumers
 		IntStream.range(ConcurrencyConfig.CONSUMER_START_RANGE, ConcurrencyConfig.CONSUMER_END_RANGE)
-				.forEach(i -> {
-					executorService.execute(new DataConsumer(sharedTasksQueue));
-				});
+				.forEach(i -> executorService.execute(new DataConsumer(sharedTasksQueue)));
 
-		// Schedule a task to forcefully terminate the application after 1 minutes to limit the data load
-		// TODO: Remove this code if you want to run the application indefinitely
-		/*Executors.newSingleThreadScheduledExecutor().schedule(() -> {
-			System.out.println("Forcefully terminating the application...");
-			System.exit(130); // Exit with a specific status code (130 is commonly used for SIGINT)
-		}, 1, TimeUnit.MINUTES);*/
+		// Optionally, schedule a task to forcefully terminate the application (remove if not needed)
+        /*Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+            System.out.println("Forcefully terminating the application...");
+            System.exit(130); // Exit with a specific status code
+        }, 10, TimeUnit.MINUTES);*/  // Adjust or remove based on usage
 	}
 }
