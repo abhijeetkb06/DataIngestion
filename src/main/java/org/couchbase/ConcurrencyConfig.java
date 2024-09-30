@@ -8,11 +8,11 @@ package org.couchbase;
 public class ConcurrencyConfig {
 
     // Thread pool configuration for producers and consumers
-    public static final int EXECUTOR_THREAD_POOL = 20;  // Adjust based on your system's CPU cores
+    public static final int EXECUTOR_THREAD_POOL = 30;  // Adjust based on your system's CPU cores
     public static final int PRODUCER_START_RANGE = 0;
-    public static final int PRODUCER_END_RANGE = 10;  // Number of producers
-    public static final int CONSUMER_START_RANGE = 0;
-    public static final int CONSUMER_END_RANGE = 10;  // Number of consumers
+    public static final int PRODUCER_END_RANGE = 5;  // Number of producers
+    public static final int CONSUMER_START_RANGE = 10;
+    public static final int CONSUMER_END_RANGE = 20;  // Number of consumers
 
     // Mock data generation parallelism
     public static final int MOCK_DATA_PARALLELISM = 10;

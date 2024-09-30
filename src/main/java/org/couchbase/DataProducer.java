@@ -40,8 +40,8 @@ public class DataProducer extends Thread {
                 System.out.println("Produced batch of size: " + mockDataList.size() + ", Queue size: " + sharedQueue.size());
 
                 // Dynamic throttling based on queue size
-                if (sharedQueue.size() > 500) {
-                    Thread.sleep(200);  // Slow down producers if the queue is overloaded
+                if (sharedQueue.size() > 1000) {
+                    Thread.sleep(1000);  // Slow down producers if the queue is overloaded
                 }
             }
         } catch (InterruptedException e) {
