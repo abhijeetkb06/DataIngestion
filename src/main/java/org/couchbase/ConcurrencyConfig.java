@@ -8,7 +8,7 @@ package org.couchbase;
 public class ConcurrencyConfig {
 
     // Thread pool configuration for producers and consumers
-    public static final int EXECUTOR_THREAD_POOL = 30;  // Adjust based on your system's CPU cores
+    public static final int EXECUTOR_THREAD_POOL = 30;  // Adjust based on system's CPU cores
     public static final int PRODUCER_START_RANGE = 0;
     public static final int PRODUCER_END_RANGE = 5;  // Number of producers
     public static final int CONSUMER_START_RANGE = 10;

@@ -11,7 +11,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 /**
- * DataProducer generates data in batches for efficient consumption.
+ * DataProducer generates data in batches.
  */
 public class DataProducer extends Thread {
 
@@ -57,7 +57,7 @@ public class DataProducer extends Thread {
                 .block();  // Generate batch of mock data
     }
 
-    // Original structure of mock data as requested
+    // SimCard Info mock data
     private JsonObject generateMockSimCardData(int index) {
         Random random = new Random();
         Faker faker = new Faker();
@@ -125,7 +125,7 @@ public class DataProducer extends Thread {
         serviceDetails.put("voiceMail", random.nextBoolean());
         serviceDetails.put("smsLimit", "Unlimited");
 
-        // Network Info (Could also vary per device, but we'll keep it common here)
+        // Network Info
         JsonObject networkInfo = JsonObject.from(new LinkedHashMap<>());
         networkInfo.put("networkType", random.nextBoolean() ? "5G" : "4G");
         networkInfo.put("homeNetwork", "Verizon");
