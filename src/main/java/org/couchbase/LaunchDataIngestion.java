@@ -28,9 +28,9 @@ public class LaunchDataIngestion {
 				.forEach(i -> executorService.execute(new DataConsumer(sharedTasksQueue)));
 
 		// Optionally, schedule a task to forcefully terminate the application (remove if not needed)
-        Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+    /*    Executors.newSingleThreadScheduledExecutor().schedule(() -> {
             System.out.println("Forcefully terminating the application...");
             System.exit(130); // Exit with a specific status code
-        }, 10, TimeUnit.MINUTES);  // Adjust or remove based on usage
+        }, 10, TimeUnit.MINUTES);  // Adjust or remove based on usage*/
 	}
 }
